@@ -16,7 +16,7 @@ public class HealthController {
         this.redis = redis;
     }
 
-    @GetMapping("/")
+    @GetMapping({"/","/api","/api/health","/health"})
     public Map<String,String> getHealth(){
         try{
             String res = redis.getConnectionFactory().getConnection().ping();

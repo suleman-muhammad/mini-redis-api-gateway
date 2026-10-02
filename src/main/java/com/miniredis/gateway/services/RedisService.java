@@ -1,11 +1,14 @@
 package com.miniredis.gateway.services;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.miniredis.gateway.dto.request.SetRequest;
-import com.miniredis.gateway.dto.response.KeyResponse;
+import com.miniredis.gateway.dto.response.KeyTTLResponse;
+import com.miniredis.gateway.dto.response.KeyValueResponse;
 import com.miniredis.gateway.exception.KeyException;
 import com.miniredis.gateway.exception.ValueException;
 
@@ -19,7 +22,7 @@ public class RedisService {
         this.redis = redis;
     }
     
-    public KeyResponse getValue(String key) throws Exception{
+    public KeyValueResponse getValue(String key) throws Exception{
         if(key == null){
             throw new KeyException("Key is Null.");
         }
@@ -29,7 +32,7 @@ public class RedisService {
         if(value == null){
             throw new KeyException("No value Assigned to Key: " + key + ".");
         }
-        return new KeyResponse(key, value);
+        return new KeyValueResponse(key, value);
     }  
 
     public void setKeyValue(SetRequest request) throws Exception{
@@ -58,4 +61,14 @@ public class RedisService {
         
         return true;
     }
+
+    public KeyTTLResponse getTtl(String key) throws Exception{
+        if(key == null){
+            throw new KeyException("Key is Null.");
+        }
+
+        long value = redis.getExpire(key,TimeUnit.SECONDS);
+
+        return new KeyTTLResponse(key, value);
+    }  
 }

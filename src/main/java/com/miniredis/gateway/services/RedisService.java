@@ -88,5 +88,19 @@ public class RedisService {
         return new KeyExpiryResponse(key, ttl);
     }
 
+    public KeyExpiryResponse persistKey(String key) throws Exception{
+        if(key == null){
+            throw new KeyException("Key is Null.");
+        }
+
+        boolean result = redis.persist(key);
+
+
+        if(!result){
+            throw new Exception("Internal ERROR.");
+        }
+
+        return new KeyExpiryResponse(key, -1);
+    }
     
 }

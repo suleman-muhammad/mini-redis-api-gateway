@@ -4,10 +4,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.stereotype.Service;
 
 import com.miniredis.gateway.dto.request.SetRequest;
-import com.miniredis.gateway.dto.response.KeyTTLResponse;
+import com.miniredis.gateway.dto.response.KeyExpiryResponse;
 import com.miniredis.gateway.dto.response.KeyValueResponse;
 import com.miniredis.gateway.exception.KeyException;
 import com.miniredis.gateway.exception.ValueException;
@@ -62,13 +63,30 @@ public class RedisService {
         return true;
     }
 
-    public KeyTTLResponse getTtl(String key) throws Exception{
+    public KeyExpiryResponse getExpiry(String key) throws Exception{
         if(key == null){
             throw new KeyException("Key is Null.");
         }
 
         long value = redis.getExpire(key,TimeUnit.SECONDS);
 
-        return new KeyTTLResponse(key, value);
+        return new KeyExpiryResponse(key, value);
     }  
+
+    public KeyExpiryResponse setExpiry(String key, long ttl) throws Exception{
+        if(key == null){
+            throw new KeyException("Key is Null.");
+        }
+
+        boolean result = redis.expire(key,Expiration.from(ttl,TimeUnit.SECONDS));
+
+
+        if(!result){
+            throw new Exception("Internal ERROR.");
+        }
+
+        return new KeyExpiryResponse(key, ttl);
+    }
+
+    
 }

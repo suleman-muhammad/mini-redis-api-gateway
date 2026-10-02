@@ -44,5 +44,18 @@ public class RedisService {
         redis.opsForValue().set(request.key(),request.value());
     } 
 
-    
+    public boolean delValue(String key) throws Exception{
+        if(key == null){
+            throw new KeyException("Key is Null.");
+        }
+
+        boolean result = redis.delete(key);
+
+
+        if(!result){
+            throw new KeyException("No value Assigned to Key: " + key + ".");
+        }
+        
+        return true;
+    }
 }

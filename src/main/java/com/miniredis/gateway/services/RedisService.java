@@ -31,4 +31,18 @@ public class RedisService {
         }
         return new KeyResponse(key, value);
     }  
+
+    public void setKeyValue(SetRequest request) throws Exception{
+        if(request.key() == null){
+            throw new KeyException("Key is Null.");
+        }
+
+        if(request.value() == null){
+            throw new ValueException("Value is Null.");
+        }
+
+        redis.opsForValue().set(request.key(),request.value());
+    } 
+
+    
 }

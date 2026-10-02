@@ -18,5 +18,17 @@ public class RedisService {
     public RedisService(StringRedisTemplate redis){
         this.redis = redis;
     }
+    
+    public KeyResponse getValue(String key) throws Exception{
+        if(key == null){
+            throw new KeyException("Key is Null.");
+        }
 
+        String value = redis.opsForValue().get(key);
+
+        if(value == null){
+            throw new KeyException("No value Assigned to Key: " + key + ".");
+        }
+        return new KeyResponse(key, value);
+    }  
 }

@@ -88,5 +88,16 @@ public class RedisController {
         }
     }
 
+    @PostMapping("/api/keys/{key}/persist")
+    public ResponseEntity<?> persistKey(@PathVariable String key){
+        try{
+            RedisResponse<Integer> res = service.persistKey(key);
+            return ResponseEntity.status(200).body(res);
+        }catch (DataAccessException e){
+            return ResponseEntity.status(500).body(Map.of("error","Internal Server Error."));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
+        }
+    }
     
 }

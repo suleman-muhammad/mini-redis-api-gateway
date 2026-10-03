@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.miniredis.gateway.dto.request.SetRequest;
-import com.miniredis.gateway.dto.response.KeyResponse;
+import com.miniredis.gateway.dto.response.KeyValueResponse;
+import com.miniredis.gateway.dto.response.RedisResponse;
 import com.miniredis.gateway.services.RedisService;
 
 @RestController 
@@ -26,39 +27,4 @@ public class RedisController {
         this.service = service;
     }
 
-    @GetMapping("/api/keys/{key}")
-    public ResponseEntity<?> getValue(@PathVariable String key){
-        try{
-            KeyResponse res = service.getValue(key);
-            return ResponseEntity.status(200).body(res);
-        }catch (DataAccessException e){
-            return ResponseEntity.status(500).body(Map.of("error","Internal Server Error."));
-        }catch (Exception e){
-            return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
-        }
-    }
-
-    @PostMapping("/api/keys/")
-    public ResponseEntity<?> setKeyValue(@RequestBody SetRequest request){
-        try{
-            service.setKeyValue(request);
-            return ResponseEntity.status(200).body(new KeyResponse(request.key(), request.value()));
-        }catch (DataAccessException e){
-            return ResponseEntity.status(500).body(Map.of("error","Internal Server Error."));
-        }catch (Exception e){
-            return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
-        }
-    }
-
-    @DeleteMapping("/api/keys/{key}")
-    public ResponseEntity<?> setKeyValue(@PathVariable String key){
-        try{
-            service.delValue(key);
-            return ResponseEntity.noContent().build();
-        }catch (DataAccessException e){
-            return ResponseEntity.status(500).body(Map.of("error","Internal Server Error."));
-        }catch (Exception e){
-            return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
-        }
-    }
 }

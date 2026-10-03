@@ -76,5 +76,17 @@ public class RedisController {
         }
     }
 
+    @PostMapping("/api/keys/ttl")
+    public ResponseEntity<?> setTimeToLiveValue(@RequestBody SetTimeToLiveRequest request ){
+        try{
+            RedisResponse<Integer> res = service.setExpiry(request.key(),request.ttl());
+            return ResponseEntity.status(200).body(res);
+        }catch (DataAccessException e){
+            return ResponseEntity.status(500).body(Map.of("error","Internal Server Error."));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
+        }
+    }
+
     
 }

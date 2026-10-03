@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.stereotype.Service;
 
-import com.miniredis.gateway.dto.request.SetRequest;
+import com.miniredis.gateway.dto.request.SetValueRequest;
 import com.miniredis.gateway.dto.response.RedisResponse;
 import com.miniredis.gateway.exception.KeyException;
 import com.miniredis.gateway.exception.ValueException;
@@ -33,7 +33,7 @@ public class RedisService {
         return new RedisResponse<String>(value);
     }  
 
-    public RedisResponse<String> setKeyValue(SetRequest request) throws Exception{
+    public RedisResponse<String> setKeyValue(SetValueRequest request) throws Exception{
         if(request.key() == null){
             throw new KeyException("Key is Null.");
         }

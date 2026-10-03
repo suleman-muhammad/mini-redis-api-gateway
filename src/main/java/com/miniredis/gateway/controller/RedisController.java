@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.miniredis.gateway.dto.request.SetRequest;
+import com.miniredis.gateway.dto.request.SetValueRequest;
 import com.miniredis.gateway.dto.request.SetTimeToLiveRequest;
-import com.miniredis.gateway.dto.response.KeyValueResponse;
 import com.miniredis.gateway.dto.response.RedisResponse;
 import com.miniredis.gateway.services.RedisService;
 
@@ -41,7 +40,7 @@ public class RedisController {
     }
 
     @PostMapping("/api/keys/")
-    public ResponseEntity<?> setKeyValue(@RequestBody SetRequest request){
+    public ResponseEntity<?> setKeyValue(@RequestBody SetValueRequest request){
         try{
             RedisResponse<String> res = service.setKeyValue(request);
             return ResponseEntity.status(200).body(res);
@@ -99,5 +98,5 @@ public class RedisController {
             return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
         }
     }
-    
+
 }

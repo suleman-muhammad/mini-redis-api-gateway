@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.miniredis.gateway.dto.request.SetRequest;
+import com.miniredis.gateway.dto.request.SetTimeToLiveRequest;
 import com.miniredis.gateway.dto.response.KeyValueResponse;
 import com.miniredis.gateway.dto.response.RedisResponse;
 import com.miniredis.gateway.services.RedisService;
@@ -62,4 +63,18 @@ public class RedisController {
             return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
         }
     }
+
+    @GetMapping("/api/keys/{key}/ttl")
+    public ResponseEntity<?> getTimeToLiveValue(@PathVariable String key){
+        try{
+            RedisResponse<Long> res = service.getExpiry(key);
+            return ResponseEntity.status(200).body(res);
+        }catch (DataAccessException e){
+            return ResponseEntity.status(500).body(Map.of("error","Internal Server Error."));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
+        }
+    }
+
+    
 }

@@ -27,4 +27,15 @@ public class RedisController {
         this.service = service;
     }
 
+    @GetMapping("/api/keys/{key}")
+    public ResponseEntity<?> getValue(@PathVariable String key){
+        try{
+            RedisResponse<String> res = service.getValue(key);
+            return ResponseEntity.status(200).body(res);
+        }catch (DataAccessException e){
+            return ResponseEntity.status(500).body(Map.of("error","Internal Server Error."));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
+        }
+    }
 }

@@ -10,12 +10,12 @@ import com.miniredis.gateway.exception.KeyException;
 import com.miniredis.gateway.exception.ValueException;
 
 @Service 
-public class RedisService {
+public class KeyService {
     
     @Autowired 
     private final StringRedisTemplate redis;
     
-    public RedisService(StringRedisTemplate redis){
+    public KeyService(StringRedisTemplate redis){
         this.redis = redis;
     }
     

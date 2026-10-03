@@ -47,7 +47,7 @@ public class RedisService {
         }
 
         redis.opsForValue().set(request.key(),request.value());
-        return new RedisResponse<String>("Ok");
+        return new RedisResponse<String>("OK");
     } 
 
     public RedisResponse<Integer> delValue(String key) throws Exception{

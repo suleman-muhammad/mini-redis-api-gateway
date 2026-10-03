@@ -55,9 +55,9 @@ public class RedisService {
             throw new KeyException("Key is Null.");
         }
 
-        boolean result = redis.delete(key);
+        Boolean result = redis.delete(key);
         
-        return new RedisResponse<>(result ? 1 : 0);
+        return new RedisResponse<>(Boolean.TRUE.equals(result) ? 1 : 0);
     }
 
     public RedisResponse<Long> getExpiry(String key) throws Exception{
@@ -76,9 +76,9 @@ public class RedisService {
             throw new KeyException("Key is Null.");
         }
 
-        boolean result = redis.expire(key,Expiration.from(ttl,TimeUnit.SECONDS));
+        Boolean result = redis.expire(key,Expiration.from(ttl,TimeUnit.SECONDS));
 
-        return new RedisResponse<>(result ? 1 : 0);
+        return new RedisResponse<>(Boolean.TRUE.equals(result) ? 1 : 0);
     }
 
     public RedisResponse<Integer> persistKey(String key) throws Exception{
@@ -86,9 +86,9 @@ public class RedisService {
             throw new KeyException("Key is Null.");
         }
 
-        boolean result = redis.persist(key);
+        Boolean result = redis.persist(key);
 
-        return new RedisResponse<>(result ? 1 : 0);
+        return new RedisResponse<>(Boolean.TRUE.equals(result) ? 1 : 0);
     }
     
 }

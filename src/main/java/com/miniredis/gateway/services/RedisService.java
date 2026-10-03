@@ -8,8 +8,7 @@ import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.stereotype.Service;
 
 import com.miniredis.gateway.dto.request.SetRequest;
-import com.miniredis.gateway.dto.response.KeyExpiryResponse;
-import com.miniredis.gateway.dto.response.KeyValueResponse;
+import com.miniredis.gateway.dto.response.RedisResponse;
 import com.miniredis.gateway.exception.KeyException;
 import com.miniredis.gateway.exception.ValueException;
 
@@ -23,20 +22,22 @@ public class RedisService {
         this.redis = redis;
     }
     
-    public KeyValueResponse getValue(String key) throws Exception{
+    public RedisResponse<String> getValue(String key) throws Exception{
+
         if(key == null){
             throw new KeyException("Key is Null.");
         }
 
         String value = redis.opsForValue().get(key);
 
-        if(value == null){
-            throw new KeyException("No value Assigned to Key: " + key + ".");
-        }
-        return new KeyValueResponse(key, value);
+        // if(value == null){
+        //     throw new KeyException("No value Assigned to Key: " + key + ".");
+        // }
+
+        return new RedisResponse<String>(value);
     }  
 
-    public void setKeyValue(SetRequest request) throws Exception{
+    public RedisResponse<String> setKeyValue(SetRequest request) throws Exception{
         if(request.key() == null){
             throw new KeyException("Key is Null.");
         }
@@ -46,61 +47,48 @@ public class RedisService {
         }
 
         redis.opsForValue().set(request.key(),request.value());
+        return new RedisResponse<String>("Ok");
     } 
 
-    public boolean delValue(String key) throws Exception{
+    public RedisResponse<Integer> delValue(String key) throws Exception{
         if(key == null){
             throw new KeyException("Key is Null.");
         }
 
         boolean result = redis.delete(key);
-
-
-        if(!result){
-            throw new KeyException("No value Assigned to Key: " + key + ".");
-        }
         
-        return true;
+        return new RedisResponse<>(result ? 1 : 0);
     }
 
-    public KeyExpiryResponse getExpiry(String key) throws Exception{
+    public RedisResponse<Long> getExpiry(String key) throws Exception{
+
         if(key == null){
             throw new KeyException("Key is Null.");
         }
 
         long value = redis.getExpire(key,TimeUnit.SECONDS);
 
-        return new KeyExpiryResponse(key, value);
+        return new RedisResponse<>(value);
     }  
 
-    public KeyExpiryResponse setExpiry(String key, long ttl) throws Exception{
+    public RedisResponse<Integer> setExpiry(String key, long ttl) throws Exception{
         if(key == null){
             throw new KeyException("Key is Null.");
         }
 
         boolean result = redis.expire(key,Expiration.from(ttl,TimeUnit.SECONDS));
 
-
-        if(!result){
-            throw new Exception("Internal ERROR.");
-        }
-
-        return new KeyExpiryResponse(key, ttl);
+        return new RedisResponse<>(result ? 1 : 0);
     }
 
-    public KeyExpiryResponse persistKey(String key) throws Exception{
+    public RedisResponse<Integer> persistKey(String key) throws Exception{
         if(key == null){
             throw new KeyException("Key is Null.");
         }
 
         boolean result = redis.persist(key);
 
-
-        if(!result){
-            throw new Exception("Internal ERROR.");
-        }
-
-        return new KeyExpiryResponse(key, -1);
+        return new RedisResponse<>(result ? 1 : 0);
     }
     
 }

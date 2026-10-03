@@ -1,14 +1,16 @@
 package com.miniredis.gateway.services;
 
-import java.security.KeyException;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.types.Expiration;
+import org.springframework.stereotype.Service;
 
 import com.miniredis.gateway.dto.response.RedisResponse;
+import com.miniredis.gateway.exception.KeyException;
 
+@Service
 public class TTLService {
     
     @Autowired 

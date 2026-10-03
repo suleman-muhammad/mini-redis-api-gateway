@@ -38,4 +38,16 @@ public class RedisController {
             return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
         }
     }
+
+    @PostMapping("/api/keys/")
+    public ResponseEntity<?> setKeyValue(@RequestBody SetRequest request){
+        try{
+            RedisResponse<String> res = service.setKeyValue(request);
+            return ResponseEntity.status(200).body(res);
+        }catch (DataAccessException e){
+            return ResponseEntity.status(500).body(Map.of("error","Internal Server Error."));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));
+        }
+    }
 }

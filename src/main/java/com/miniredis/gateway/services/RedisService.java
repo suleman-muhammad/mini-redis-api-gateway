@@ -53,4 +53,15 @@ public class RedisService {
         return new RedisResponse<>(Boolean.TRUE.equals(result) ? 1 : 0);
     }
 
+    public RedisResponse<Integer> exists(String key) throws Exception{
+
+        if(key == null){
+            throw new KeyException("Key is Null.");
+        }
+
+        Boolean result = redis.hasKey(key);
+        
+       return new RedisResponse<>(Boolean.TRUE.equals(result) ? 1 : 0);
+    }
+
 }

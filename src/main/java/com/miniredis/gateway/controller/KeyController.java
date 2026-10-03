@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.miniredis.gateway.dto.request.SetValueRequest;
 import com.miniredis.gateway.dto.response.RedisResponse;
-import com.miniredis.gateway.services.RedisService;
+import com.miniredis.gateway.services.KeyService;
 
 @RestController 
-public class Controller {
+public class KeyController {
     
     @Autowired 
-    private final RedisService service;
+    private final KeyService service;
 
-    public RedisController(RedisService service){
+    public KeyController(KeyService service){
         this.service = service;
     }
 

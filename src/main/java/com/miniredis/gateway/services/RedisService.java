@@ -30,10 +30,6 @@ public class RedisService {
 
         String value = redis.opsForValue().get(key);
 
-        // if(value == null){
-        //     throw new KeyException("No value Assigned to Key: " + key + ".");
-        // }
-
         return new RedisResponse<String>(value);
     }  
 

@@ -1,0 +1,19 @@
+services:
+  gateway:
+    build: .
+    container_name: mini-redis-gateway
+    restart: unless-stopped
+    ports:
+      - "80:8080"
+    environment:
+      - PORT=8080
+      - REDIS_HOST=mini-redis
+      - REDIS_PORT=6380
+      - JAVA_TOOL_OPTIONS=-Xmx256m
+    networks:
+      - mini-redis_default
+
+networks:
+  mini-redis_default:
+    external: true
+

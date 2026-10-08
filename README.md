@@ -159,16 +159,46 @@ java -Xmx256m -DREDIS_HOST=127.0.0.1 -DREDIS_PORT=6380 -jar build/libs/mini-redi
 
 ---
 
-## 🌐 Production Deployment
+## 🌐 Production Cloud Architecture & Deployment
 
-### Deploying on Render / Railway
-1. **Target Mini-Redis**: Deploy `mini-redis` to a TCP-supporting host (Railway, Fly.io, or VPS) to obtain an external TCP address (e.g. `roundhouse.proxy.rlwy.net:12345`).
-2. **Deploy Gateway**: Deploy `mini-redis-gateway` on Render as a **Web Service**:
-   - Build Command: `./gradlew bootJar`
-   - Start Command: `java -jar build/libs/mini-redis-gateway-0.0.1-SNAPSHOT.jar`
-   - Set Environment Variables:
-     - `REDIS_HOST` = `<your-tcp-host>`
-     - `REDIS_PORT` = `<your-tcp-port>`
+The gateway is designed to run in containerized environments with **Caddy** as a reverse proxy for zero-configuration, automated HTTPS:
+
+```
+[ Internet / Browser ] ──HTTPS (Port 443)──► [ Caddy Reverse Proxy ]
+                                                     │
+                                        Internal HTTP (Port 8080)
+                                                     ▼
+                                          [ Mini-Redis Gateway ]
+                                                     │
+                                       Private Bridge (Port 6380)
+                                                     ▼
+                                            [ Mini-Redis Engine ]
+```
+
+### Docker Compose with Automated SSL
+The provided [`docker-compose.yml`](docker-compose.yml) pairs the gateway with Caddy for automatic Let's Encrypt TLS:
+
+```bash
+docker compose up -d --build
+```
+
+- **Live Production Endpoint:** [https://api.miniredis.suleman.app/health](https://api.miniredis.suleman.app/health)
+- **Automatic TLS Termination:** Caddy manages certificate issuing and auto-renewal on Port 443.
+- **Cross-Origin Resource Sharing (CORS):** Configured via [`CorsConfig.java`](src/main/java/com/miniredis/gateway/config/CorsConfig.java) allowing frontend SPAs (`suleman.app`, `suleman.me`, Vercel, localhost).
+
+---
+
+## 🧪 Testing
+
+The gateway includes sliced Spring MVC tests using `@WebMvcTest` and `@MockitoBean`, adhering to the standard `method_state_result` naming convention:
+
+```bash
+./gradlew test
+```
+
+- `KeyControllerTest`: Verifies HTTP status codes, JSON serialization, and error handling for key mutations.
+- `HealthControllerTest`: Verifies health indicator and Redis ping status.
+- `KeyServiceTest`: Unit tests validating business rules and input constraints.
 
 ---
 

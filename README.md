@@ -30,15 +30,31 @@ Web applications, browsers, serverless functions, and HTTP clients cannot speak 
 
 All requests and responses use `application/json`.
 
+- **Production Base URL:** `https://api.miniredis.suleman.app`
+- **Local Base URL:** `http://localhost:8080`
+
+### Error Response Format
+When an operation fails (e.g., missing key or database error), endpoints return:
+```json
+{
+  "error": "Key is Null."
+}
+```
+HTTP Status: `404 Not Found` (validation/client error) or `500 Internal Server Error` (connection error).
+
+---
+
 ### 1. Health & Status
+
 Used by uptime monitoring and cloud container health probes (Render, Railway, Fly.io).
 
 | Method | Endpoint | Description | Response Example |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/health`<br>`/api/health`<br>`/` | Pings the Redis TCP server | `{"status": "Up", "redis": "PONG"}` |
+| `GET` | `/health`<br>`/api/health`<br>`/api`<br>`/` | Pings the Redis TCP server | `{"status": "Up", "redis": "PONG"}` |
 
 ```bash
-curl http://localhost:8080/health
+curl https://api.miniredis.suleman.app/health
+# or locally: curl http://localhost:8080/health
 ```
 
 ---
